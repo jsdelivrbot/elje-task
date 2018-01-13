@@ -8,6 +8,13 @@ import type { Point } from './lib'
 
 @observer
 export default class App extends Component<any, any> {
+  handleAddPress = () => {
+    dashboardInstance.createPoint({
+      x: Math.floor(Math.random() * dashboardInstance.viewportWidth * dashboardInstance.scale) + 0,
+      y: Math.floor(Math.random() * dashboardInstance.viewportHeight * dashboardInstance.scale) + 0
+    })
+  }
+
   renderContent () {
     const pointsDom = dashboardInstance.points.map((v: Point) => {
       const isActive = dashboardInstance.activePoints.includes(v)
@@ -48,8 +55,8 @@ export default class App extends Component<any, any> {
 
     return (
       <svg
-        height={dashboardInstance.viewportHeight}
-        width={dashboardInstance.viewportWidth}
+        height={dashboardInstance.viewportHeight * dashboardInstance.scale}
+        width={dashboardInstance.viewportWidth * dashboardInstance.scale}
       >
         {pointsDom}
         {vectorsDom}
@@ -60,7 +67,9 @@ export default class App extends Component<any, any> {
   render () {
     return (
       <div className='container'>
-        <div className='toolbox' />
+        <div className='toolbox'>
+          <button className='toolbox__item' onClick={this.handleAddPress}>+</button>
+        </div>
         <div className='body'>
           {this.renderContent()}
         </div>

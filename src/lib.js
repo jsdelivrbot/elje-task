@@ -30,9 +30,9 @@ export class Dashboard {
   points: Array<Point> = [];
   @observable
   vectors: Array<Vector> = [];
-  viewportWidth: number = 200;
-  viewportHeight: number = 200;
-  scale: 1;
+  viewportWidth: number = 400;
+  viewportHeight: number = 400;
+  scale: number = 1;
 
   constructor (initialPoints: Array<Point>) {
     initialPoints.forEach(v => this.createPoint(v))
@@ -114,8 +114,8 @@ export class Dashboard {
 }
 
 const initialPoints = [
-  Dashboard.createPointStatic({ x: 10, y: 20 }),
-  Dashboard.createPointStatic({ x: 50, y: 120 }),
+  Dashboard.createPointStatic({ x: 30, y: 300 }),
+  Dashboard.createPointStatic({ x: 250, y: 120 }),
   Dashboard.createPointStatic({ x: 150, y: 167 })
 ]
 

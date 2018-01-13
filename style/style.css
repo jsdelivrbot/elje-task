@@ -39,3 +39,11 @@
 .vector:hover {
   stroke: #6f3aec;
 }
+
+.toolbox__item {
+  background-color: #fff;
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+  border: none;
+}
