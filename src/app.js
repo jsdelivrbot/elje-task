@@ -4,9 +4,10 @@ import { partial } from 'lodash'
 import { observer } from 'mobx-react'
 
 import type { Point } from './lib'
+import { Dashboard } from './lib'
 
 type Props = {
-  dashboard: any
+  dashboard: Dashboard
 };
 
 type State = {};
@@ -15,7 +16,7 @@ type State = {};
 export default class App extends Component<Props, State> {
   handleAddPress = () => {
     this.props.dashboard.createPoint({
-      x: Math.floor(Math.random() * 1000) + 0, // random 0-1000
+      x: Math.floor(Math.random() * 1000) + 0, // random 0-1000, PoW for scaling
       y: Math.floor(Math.random() * 1000) + 0
     })
   };
@@ -25,14 +26,14 @@ export default class App extends Component<Props, State> {
     if (activePoints.length) {
       this.props.dashboard.removePoint(activePoints[0].id)
     }
-  }
+  };
 
   renderContent () {
     const scale = this.props.dashboard.scale
     const pointsDom = this.props.dashboard.points.map((v: Point) => {
       const isActive = this.props.dashboard.activePoints.includes(v)
       const activeClass = isActive ? 'active' : 'point'
-      const scaleRadius = scale < 1 ? (scale < 0.5 ? 3 : 6) : 10
+      const scaleRadius = scale < 1 ? scale < 0.5 ? 3 : 6 : 10
 
       return (
         <g id={v.id}>
@@ -81,16 +82,24 @@ export default class App extends Component<Props, State> {
   render () {
     const scale = this.props.dashboard.scale
     const hasActivePoints = this.props.dashboard.activePoints.length > 0
-    const bodyClass = scale < 1 ? (scale < 0.5 ? 'body xsmall' : 'body small') : 'body'
+    const bodyClass = scale < 1
+      ? scale < 0.5 ? 'body xsmall' : 'body small'
+      : 'body'
 
+    // need to extract toolbox body components
+    // maybenexttime
     return (
       <div className='container'>
         <div className='toolbox'>
           <button className='toolbox__item' onClick={this.handleAddPress}>
             +
           </button>
-          <button className='toolbox__item' disabled={!hasActivePoints} onClick={this.handleRemovePress}>
-            x
+          <button
+            className='toolbox__item'
+            disabled={!hasActivePoints}
+            onClick={this.handleRemovePress}
+          >
+            ✖
           </button>
         </div>
         <div className={bodyClass}>
