@@ -20,8 +20,7 @@ export type Vector = {
   startY: number,
   endX: number,
   endY: number,
-  points: Array<Point>,
-  hightlighted: boolean
+  points: Array<Point>
 };
 
 export class Dashboard {
@@ -100,7 +99,6 @@ export class Dashboard {
       startY: p1.y,
       endX: p2.x,
       endY: p2.y,
-      hightlighted: false,
       points: [p1, p2]
     }
 
