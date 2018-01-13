@@ -17,7 +17,7 @@ type State = {};
 export default class App extends Component<Props, State> {
   handleAddPress = () => {
     this.props.dashboard.createPoint({
-      x: Math.floor(Math.random() * 1000) + 0, // random 0-1000, PoW for scaling
+      x: Math.floor(Math.random() * 1000) + 0, // random 0-1000, Proof of work for scaling
       y: Math.floor(Math.random() * 1000) + 0
     })
   };
