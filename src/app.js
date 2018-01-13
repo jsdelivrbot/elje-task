@@ -37,19 +37,17 @@ export default class App extends Component<Props, State> {
       const scaleRadius = scale < 1 ? scale < 0.5 ? 3 : 6 : 10
 
       return (
-        <g id={v.id} key={v.id}>
-          <circle
-            className={`point ${activeClass}`}
-            cx={v.x * this.props.dashboard.scale}
-            cy={v.y * this.props.dashboard.scale}
-            fill='#e45959'
-            key={v.id}
-            r={scaleRadius}
-            stroke='#e3e3e3'
-            strokeWidth='1'
-            onClick={partial(this.props.dashboard.activatePoint, v)}
-          />
-        </g>
+        <circle
+          className={`point ${activeClass}`}
+          cx={v.x * this.props.dashboard.scale}
+          cy={v.y * this.props.dashboard.scale}
+          fill='#e45959'
+          key={v.id}
+          r={scaleRadius}
+          stroke='#e3e3e3'
+          strokeWidth='1'
+          onClick={partial(this.props.dashboard.activatePoint, v)}
+        />
       )
     })
 
