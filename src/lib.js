@@ -1,5 +1,5 @@
 //  @flow
-import { observable } from 'mobx'
+import { action, observable } from 'mobx'
 
 export type Point = {
   id: string,
@@ -38,6 +38,7 @@ export class Dashboard {
     initialPoints.forEach(v => this.createPoint(v))
   }
 
+  @action
   createPoint = (arg: CreatePointType) => {
     let newPoint: Point = {
       id: Dashboard.generateId(),
@@ -66,10 +67,12 @@ export class Dashboard {
     return newPoint
   };
 
+  @action
   removePoint = (id: string) => {
     this.points = this.points.filter(v => v.id !== id)
   };
 
+  @action
   addVector = (p1: Point, p2: Point) => {
     let newVector: Vector = {
       id: Dashboard.generateId(),
@@ -86,10 +89,12 @@ export class Dashboard {
     this.vectors.push(newVector)
   };
 
+  @action
   removeVector = (id: string) => {
     this.vectors = this.vectors.filter(v => v.id !== id)
   };
 
+  @action
   activatePoint = (item: Point) => {
     if (this.activePoints.includes(item)) {
       this.activePoints = this.activePoints.filter(v => v.id !== item.id)
@@ -101,6 +106,7 @@ export class Dashboard {
     }
   };
 
+  @action
   autoCreateVector = () => {
     this.addVector(this.activePoints[0], this.activePoints[1])
     this.activePoints = []

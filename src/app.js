@@ -8,33 +8,15 @@ import type { Point } from './lib'
 
 @observer
 export default class App extends Component<any, any> {
-  renderAnchor = (point: Point) => {
-    if (dashboardInstance.activePoints.length === 0) return null
-
-    const index = dashboardInstance.activePoints.indexOf(point)
-    if (index > -1) {
-      return (
-        <text
-          className='anchor'
-          dy='.3em'
-          fill='#fff'
-          key={point.id}
-          textAnchor='middle'
-          x={point.x}
-          y={point.y}
-        >
-          {index + 1}
-        </text>
-      )
-    }
-  };
-
   renderContent () {
-    const pointsDom = dashboardInstance.points.map(v => {
+    const pointsDom = dashboardInstance.points.map((v: Point) => {
+      const isActive = dashboardInstance.activePoints.includes(v)
+      const className = isActive ? 'point active' : 'point'
+
       return (
         <g id={v.id}>
           <circle
-            className='point'
+            className={className}
             cx={v.x}
             cy={v.y}
             fill='#e45959'
@@ -44,7 +26,6 @@ export default class App extends Component<any, any> {
             strokeWidth='1'
             onClick={partial(dashboardInstance.activatePoint, v)}
           />
-          {this.renderAnchor(v)}
         </g>
       )
     })

@@ -27,6 +27,10 @@
   fill: #d41919;
 }
 
+.point.active {
+  fill: #610000;
+}
+
 .anchor {
   pointer-events: none;
   cursor: default;
