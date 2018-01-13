@@ -5,6 +5,7 @@ import { observer } from 'mobx-react'
 
 import type { Point } from './lib'
 import { Dashboard } from './lib'
+import Instruction from './instuction'
 
 type Props = {
   dashboard: Dashboard
@@ -36,7 +37,7 @@ export default class App extends Component<Props, State> {
       const scaleRadius = scale < 1 ? scale < 0.5 ? 3 : 6 : 10
 
       return (
-        <g id={v.id}>
+        <g id={v.id} key={v.id}>
           <circle
             className={`point ${activeClass}`}
             cx={v.x * this.props.dashboard.scale}
@@ -105,6 +106,7 @@ export default class App extends Component<Props, State> {
         <div className={bodyClass}>
           {this.renderContent()}
         </div>
+        <Instruction />
       </div>
     )
   }

@@ -33,6 +33,15 @@
   background-position:0 0, 5px 5px;
 }
 
+.insruction {
+  padding: 10px 30px
+}
+
+.insruction__text {
+  color: grey;
+  font-family: 'Avenir Next', Arial, sans-serif;
+  font-size: 14px;
+}
 
 .point:hover {
   fill: #d41919;

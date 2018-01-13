@@ -1,5 +1,6 @@
 //  @flow
 import { action, observable } from 'mobx'
+import { isEqual } from 'lodash'
 
 export type Point = {
   id: string,
@@ -24,33 +25,30 @@ export type Vector = {
 };
 
 export class Dashboard {
-  @observable
-  activePoints: Array<Point> = []; // to create vector we need 2 points
-  @observable
-  points: Array<Point> = [];
-  @observable
-  vectors: Array<Vector> = [];
+  @observable activePoints: Array<Point> = []; // to create vector we need 2 points
+  @observable points: Array<Point> = [];
+  @observable vectors: Array<Vector> = [];
   viewportWidth: number = 400;
   viewportHeight: number = 400;
-  @observable
-  scale: number = 1;
+  @observable scale: number = 1;
 
   constructor (initialPoints: Array<Point>) {
     initialPoints.forEach(v => this.createPoint(v))
   }
 
-  @action
-  calculateScale = () => {
-    const maxDistantPoint = Math.max.apply(null, this.points.map(v => Math.max(v.x, v.y)))
+  @action calculateScale = () => {
+    const maxDistantPoint = Math.max.apply(
+      null,
+      this.points.map(v => Math.max(v.x, v.y))
+    )
     if (maxDistantPoint > this.viewportWidth * this.scale) {
       this.scale = this.viewportWidth / maxDistantPoint
     } else {
       this.scale = 1
     }
-  }
+  };
 
-  @action
-  createPoint = (arg: CreatePointType) => {
+  @action createPoint = (arg: CreatePointType) => {
     let newPoint: Point = {
       id: Dashboard.generateId(),
       x: arg.x,
@@ -79,16 +77,23 @@ export class Dashboard {
     return newPoint
   };
 
-  @action
-  removePoint = (id: string) => {
+  @action removePoint = (id: string) => {
     this.points = this.points.filter(v => v.id !== id)
     this.activePoints = this.activePoints.filter(v => v.id !== id)
-    this.vectors = this.vectors.filter(v => !v.points.map(p => p.id).includes(id))
+    this.vectors = this.vectors.filter(
+      v => !v.points.map(p => p.id).includes(id)
+    )
     this.calculateScale()
   };
 
-  @action
-  addVector = (p1: Point, p2: Point) => {
+  @action addVector = (p1: Point, p2: Point) => {
+    const alreadyHasVector = this.vectors.find(v => {
+      const oldPoints = v.points.map(p => p.id).sort()
+      const newPoints = [p1.id, p2.id].sort()
+      return isEqual(oldPoints, newPoints)
+    })
+    if (alreadyHasVector) return
+
     let newVector: Vector = {
       id: Dashboard.generateId(),
       startX: p1.x,
@@ -104,13 +109,11 @@ export class Dashboard {
     this.vectors.push(newVector)
   };
 
-  @action
-  removeVector = (id: string) => {
+  @action removeVector = (id: string) => {
     this.vectors = this.vectors.filter(v => v.id !== id)
   };
 
-  @action
-  activatePoint = (item: Point) => {
+  @action activatePoint = (item: Point) => {
     if (this.activePoints.includes(item)) {
       this.activePoints = this.activePoints.filter(v => v.id !== item.id)
     } else {
@@ -121,11 +124,10 @@ export class Dashboard {
     }
   };
 
-  @action
-  autoCreateVector = () => {
+  @action autoCreateVector = () => {
     this.addVector(this.activePoints[0], this.activePoints[1])
     this.activePoints = []
-  }
+  };
 }
 
 const initialPoints = [
