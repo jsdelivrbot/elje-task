@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { dashboardInstance } from './lib'
 
 import App from './app'
 
-ReactDOM.render(<App />, document.querySelector('.container'))
+ReactDOM.render(<App dashboard={dashboardInstance} />, document.querySelector('.container'))

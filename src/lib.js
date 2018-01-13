@@ -32,10 +32,21 @@ export class Dashboard {
   vectors: Array<Vector> = [];
   viewportWidth: number = 400;
   viewportHeight: number = 400;
+  @observable
   scale: number = 1;
 
   constructor (initialPoints: Array<Point>) {
     initialPoints.forEach(v => this.createPoint(v))
+  }
+
+  @action
+  calculateScale = () => {
+    const maxDistantPoint = Math.max.apply(null, this.points.map(v => Math.max(v.x, v.y)))
+    if (maxDistantPoint > this.viewportWidth * this.scale) {
+      this.scale = this.viewportWidth / maxDistantPoint
+    } else {
+      this.scale = 1
+    }
   }
 
   @action
@@ -48,6 +59,7 @@ export class Dashboard {
     }
 
     this.points.push(newPoint)
+    this.calculateScale()
   };
 
   static generateId = (): string => {
@@ -70,6 +82,9 @@ export class Dashboard {
   @action
   removePoint = (id: string) => {
     this.points = this.points.filter(v => v.id !== id)
+    this.activePoints = this.activePoints.filter(v => v.id !== id)
+    this.vectors = this.vectors.filter(v => !v.points.map(p => p.id).includes(id))
+    this.calculateScale()
   };
 
   @action

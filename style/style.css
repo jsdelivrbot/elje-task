@@ -23,6 +23,17 @@
   position: relative;
 }
 
+.body.small{
+  background-size:30px 30px;
+  background-position:0 0, 15px 15px;
+}
+
+.body.xsmall{
+  background-size:10px 10px;
+  background-position:0 0, 5px 5px;
+}
+
+
 .point:hover {
   fill: #d41919;
 }
@@ -46,4 +57,8 @@
   height: 30px;
   margin: 10px;
   border: none;
+}
+
+.toolbox__item[disabled] {
+  background-color: #efefef;
 }

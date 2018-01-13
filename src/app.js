@@ -3,60 +3,74 @@ import React, { Component } from 'react'
 import { partial } from 'lodash'
 import { observer } from 'mobx-react'
 
-import { dashboardInstance } from './lib'
 import type { Point } from './lib'
 
+type Props = {
+  dashboard: any
+};
+
+type State = {};
+
 @observer
-export default class App extends Component<any, any> {
+export default class App extends Component<Props, State> {
   handleAddPress = () => {
-    dashboardInstance.createPoint({
-      x: Math.floor(Math.random() * dashboardInstance.viewportWidth * dashboardInstance.scale) + 0,
-      y: Math.floor(Math.random() * dashboardInstance.viewportHeight * dashboardInstance.scale) + 0
+    this.props.dashboard.createPoint({
+      x: Math.floor(Math.random() * 1000) + 0, // random 0-1000
+      y: Math.floor(Math.random() * 1000) + 0
     })
+  };
+
+  handleRemovePress = () => {
+    const activePoints = this.props.dashboard.activePoints
+    if (activePoints.length) {
+      this.props.dashboard.removePoint(activePoints[0].id)
+    }
   }
 
   renderContent () {
-    const pointsDom = dashboardInstance.points.map((v: Point) => {
-      const isActive = dashboardInstance.activePoints.includes(v)
-      const className = isActive ? 'point active' : 'point'
+    const scale = this.props.dashboard.scale
+    const pointsDom = this.props.dashboard.points.map((v: Point) => {
+      const isActive = this.props.dashboard.activePoints.includes(v)
+      const activeClass = isActive ? 'active' : 'point'
+      const scaleRadius = scale < 1 ? (scale < 0.5 ? 3 : 6) : 10
 
       return (
         <g id={v.id}>
           <circle
-            className={className}
-            cx={v.x}
-            cy={v.y}
+            className={`point ${activeClass}`}
+            cx={v.x * this.props.dashboard.scale}
+            cy={v.y * this.props.dashboard.scale}
             fill='#e45959'
             key={v.id}
-            r='10'
+            r={scaleRadius}
             stroke='#e3e3e3'
             strokeWidth='1'
-            onClick={partial(dashboardInstance.activatePoint, v)}
+            onClick={partial(this.props.dashboard.activatePoint, v)}
           />
         </g>
       )
     })
 
-    const vectorsDom = dashboardInstance.vectors.map(v => {
+    const vectorsDom = this.props.dashboard.vectors.map(v => {
       return (
         <line
           className='vector'
           key={v.id}
           stroke='#9e7dec'
           strokeWidth='2'
-          x1={v.startX}
-          x2={v.endX}
-          y1={v.startY}
-          y2={v.endY}
-          onClick={partial(dashboardInstance.removeVector, v.id)}
+          x1={v.startX * this.props.dashboard.scale}
+          x2={v.endX * this.props.dashboard.scale}
+          y1={v.startY * this.props.dashboard.scale}
+          y2={v.endY * this.props.dashboard.scale}
+          onClick={partial(this.props.dashboard.removeVector, v.id)}
         />
       )
     })
 
     return (
       <svg
-        height={dashboardInstance.viewportHeight * dashboardInstance.scale}
-        width={dashboardInstance.viewportWidth * dashboardInstance.scale}
+        height={this.props.dashboard.viewportHeight + 5} // need margin
+        width={this.props.dashboard.viewportWidth + 5}
       >
         {pointsDom}
         {vectorsDom}
@@ -65,12 +79,21 @@ export default class App extends Component<any, any> {
   }
 
   render () {
+    const scale = this.props.dashboard.scale
+    const hasActivePoints = this.props.dashboard.activePoints.length > 0
+    const bodyClass = scale < 1 ? (scale < 0.5 ? 'body xsmall' : 'body small') : 'body'
+
     return (
       <div className='container'>
         <div className='toolbox'>
-          <button className='toolbox__item' onClick={this.handleAddPress}>+</button>
+          <button className='toolbox__item' onClick={this.handleAddPress}>
+            +
+          </button>
+          <button className='toolbox__item' disabled={!hasActivePoints} onClick={this.handleRemovePress}>
+            x
+          </button>
         </div>
-        <div className='body'>
+        <div className={bodyClass}>
           {this.renderContent()}
         </div>
       </div>
