@@ -1,0 +1,37 @@
+{
+  "extends": [
+    "standard",
+    "standard-react",
+    "plugin:flowtype/recommended"
+  ],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "mocha": true,
+    "node": true,
+    "jest": true
+  },
+  "globals": {
+    "__DEV__": true,
+    "expect": true
+  },
+  "rules": {
+    "react/jsx-sort-props": [
+      2,
+      {
+        "callbacksLast": true
+      }
+    ],
+    "react/sort-prop-types": [
+      2,
+      {
+        "callbacksLast": true
+      }
+    ],
+    "react/prop-types": false,
+    "comma-dangle": "off"
+  },
+  "plugins": [
+    "flowtype"
+  ]
+}
